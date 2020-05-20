@@ -6,7 +6,12 @@ class Responsavel {
   String cpf;
   List<Aluno> alunos;
 
-  Responsavel({this.id, this.nome, this.cpf, this.alunos});
+  Responsavel({
+    this.id,
+    this.nome,
+    this.cpf,
+    this.alunos,
+  });
 
   Responsavel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,5 +35,3 @@ class Responsavel {
     return data;
   }
 }
-
-

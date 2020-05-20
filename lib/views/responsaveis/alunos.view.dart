@@ -21,12 +21,12 @@ class AlunosView extends StatelessWidget {
     final _responsavelStore =
         Provider.of<ResponsavelStore>(context, listen: false);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Escolha o Aluno'),
-      ),
-      body: SafeArea(
-        child: _responsavelStore.alunos.isEmpty
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Escolha o Aluno'),
+        ),
+        body: _responsavelStore.alunos.isEmpty
             ? Center(
                 child: CircularProgressIndicator(),
               )

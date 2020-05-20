@@ -31,9 +31,9 @@ abstract class _ResponsavelStore with Store {
           disciplinaId: 1,
           disciplina: 'Português',
           desafio: 'Escreva o alfabeto de A à Z',
-          status: Status.Visualizada,
+          status: StatusEnum.Visualizada,
           resposta: '',
-          feedback: Feedback.RealizadoSemAproveitamento,
+          feedback: FeedbackEnum.RealizadoSemAproveitamento,
           url: 'https://www.youtube.com/embed/watch?v=hJ_dcDN1bgw',
         ),
         Aula(
@@ -42,9 +42,9 @@ abstract class _ResponsavelStore with Store {
           disciplinaId: 2,
           disciplina: 'Matemática',
           desafio: 'Escreva os número de 1 a 10',
-          status: Status.Realizada,
+          status: StatusEnum.Realizada,
           resposta: '1, 2, 3, 4, 5, 6, 7, 8, 9 e 10.',
-          feedback: Feedback.RealizadoComAproveitamento,
+          feedback: FeedbackEnum.RealizadoComAproveitamento,
           url: 'https://www.youtube.com/embed/watch?v=hJ_dcDN1bgw',
         ),
         Aula(
@@ -53,9 +53,9 @@ abstract class _ResponsavelStore with Store {
           disciplinaId: 3,
           disciplina: 'Ciências',
           desafio: 'Escreva o nome de um mamífero',
-          status: Status.Realizada,
+          status: StatusEnum.Realizada,
           resposta: 'Cobra',
-          feedback: Feedback.RealizadoSemAproveitamento,
+          feedback: FeedbackEnum.RealizadoSemAproveitamento,
           url: 'https://www.youtube.com/embed/watch?v=hJ_dcDN1bgw',
         ),
         Aula(
@@ -64,9 +64,9 @@ abstract class _ResponsavelStore with Store {
           disciplinaId: 2,
           disciplina: 'Matemática',
           desafio: 'Escreva os número de 2 a 20',
-          status: Status.Realizada,
-          resposta: '1, 2, 3, 4, 5, 6, 7, 8, 9 e 10.',
-          feedback: Feedback.RealizadoSemAproveitamento,
+          status: StatusEnum.Pendente,
+          resposta: '',
+          feedback: FeedbackEnum.RealizadoSemAproveitamento,
           url: 'https://www.youtube.com/embed/watch?v=hJ_dcDN1bgw',
         ),
       ],
@@ -82,14 +82,14 @@ abstract class _ResponsavelStore with Store {
       turno: 'Tarde',
       aulas: [
         Aula(
-          id: 2,
-          titulo: 'Título da Aula 02',
+          id: 5,
+          titulo: 'Título da Aula 05',
           disciplinaId: 2,
           disciplina: 'Matemática',
           desafio: 'Escreva os número de 1 a 10',
-          status: Status.Realizada,
+          status: StatusEnum.Realizada,
           resposta: '1, 2, 3, 4, 5, 6, 7, 8, 9 e 10.',
-          feedback: Feedback.RealizadoComAproveitamento,
+          feedback: FeedbackEnum.RealizadoComAproveitamento,
           url: 'https://www.youtube.com/embed/watch?v=hJ_dcDN1bgw',
         )
       ],
@@ -101,6 +101,17 @@ abstract class _ResponsavelStore with Store {
 
   @observable
   Aula _aula;
+
+  Set<String> disciplinas() => _aluno.aulas.map((aula) => aula.disciplina).toSet();
+
+  Set<String> aulasPendentes(int disciplinaId) {
+    final aulas = _aluno.aulas
+        .where((aula) => aula.status == StatusEnum.Pendente)
+        .where((aula) => aula.disciplinaId == disciplinaId)
+        .map((aula) => aula.disciplina)
+        .toSet();
+    return aulas;
+  }
 
   String get nome => _nome.toString();
 
@@ -127,7 +138,7 @@ abstract class _ResponsavelStore with Store {
 
   @action
   void setAluno(Aluno aluno) => _aluno = aluno;
-  
+
   @action
   void setAula(Aula aula) => _aula = aula;
 }

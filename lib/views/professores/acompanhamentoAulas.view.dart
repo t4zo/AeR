@@ -5,12 +5,12 @@ class AcompanhamentoAulasView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Acompanhamento das Aulas'),
-      ),
-      body: SafeArea(
-        child: Center(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Acompanhamento das Aulas'),
+        ),
+        body: Center(
           child: const Text('Acompanhamento de Aulas'),
         ),
       ),

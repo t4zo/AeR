@@ -28,9 +28,9 @@ class ProfessorViewState extends State<ProfessorView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: GestureDetector(
+    return SafeArea(
+      child: Scaffold(
+        body: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
           child: SingleChildScrollView(
             child: Container(

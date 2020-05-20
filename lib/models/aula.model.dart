@@ -1,15 +1,15 @@
-enum Status { Pendente, Visualizada, Realizada }
-enum Feedback { RealizadoComAproveitamento, RealizadoSemAproveitamento }
+enum StatusEnum { All, Pendente, Visualizada, Realizada }
+enum FeedbackEnum { All, RealizadoComAproveitamento, RealizadoSemAproveitamento }
 
 class Aula {
   int id;
   int disciplinaId;
   String disciplina;
   String titulo;
-  Status status;
+  StatusEnum status;
   String desafio;
   String resposta;
-  Feedback feedback;
+  FeedbackEnum feedback;
   String url;
 
   Aula({
