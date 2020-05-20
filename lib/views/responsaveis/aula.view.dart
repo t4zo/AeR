@@ -20,7 +20,7 @@ class _AulaViewState extends State<AulaView> {
   var _videoId = '1nIKe33ZELX8nQw4DrhkQhsjhOA-R5jzb';
   bool _isLocal = false;
   bool _initialLoading = true;
-  bool _downloadVideoloading = false;
+  bool _loadingVideo = false;
   YoutubePlayerController _youtubePlayerController;
   VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
@@ -28,25 +28,12 @@ class _AulaViewState extends State<AulaView> {
   @override
   void initState() {
     super.initState();
-    final _responsavelStore =
-        Provider.of<ResponsavelStore>(context, listen: false);
-
     syspaths.getApplicationDocumentsDirectory().then((appDir) {
       final _file = File('${appDir.path}/videos/$_videoId.mp4');
 
       _file.exists().then((exists) {
         if (!exists) {
-          final videoId = _responsavelStore.aula.url.split('?v=')[1];
-          _youtubePlayerController = YoutubePlayerController(
-            initialVideoId: videoId,
-            flags: YoutubePlayerFlags(
-              autoPlay: false,
-            ),
-          );
-          setState(() {
-            _isLocal = false;
-            _initialLoading = false;
-          });
+          _handleYoutubeVideo();
         } else {
           _handleLocalVideo(_file);
           setState(() {
@@ -67,14 +54,33 @@ class _AulaViewState extends State<AulaView> {
     }
   }
 
+  void _handleYoutubeVideo() {
+    final _responsavelStore =
+        Provider.of<ResponsavelStore>(context, listen: false);
+
+    final videoId = _responsavelStore.aula.url.split('?v=')[1];
+    _youtubePlayerController = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: YoutubePlayerFlags(
+        autoPlay: false,
+      ),
+    );
+
+    setState(() {
+      _isLocal = false;
+      _initialLoading = false;
+    });
+  }
+
   void _handleLocalVideo(File video) {
     final videoPlayerController = VideoPlayerController.file(video)
       ..initialize().then((_) {});
     final chewieController = ChewieController(
-        videoPlayerController: videoPlayerController,
-        aspectRatio: 3 / 2,
-        autoPlay: false,
-        looping: false);
+      videoPlayerController: videoPlayerController,
+      aspectRatio: 3 / 2,
+      autoPlay: false,
+      looping: false,
+    );
 
     setState(() {
       _videoPlayerController = videoPlayerController;
@@ -96,7 +102,7 @@ class _AulaViewState extends State<AulaView> {
     final _video = '${_dirAeR.path}/$_videoId.mp4';
 
     setState(() {
-      _downloadVideoloading = true;
+      _loadingVideo = true;
     });
 
     await Dio().download(
@@ -107,7 +113,7 @@ class _AulaViewState extends State<AulaView> {
 
     setState(() {
       _isLocal = true;
-      _downloadVideoloading = false;
+      _loadingVideo = false;
     });
 
     showDialog(
@@ -129,17 +135,27 @@ class _AulaViewState extends State<AulaView> {
       final app = await syspaths.getApplicationDocumentsDirectory();
       final videoPath = '${app.path}/videos/$_videoId.mp4';
       final video = File(videoPath);
+
       setState(() {
-        _downloadVideoloading = true;
+        _loadingVideo = true;
       });
+
       await video.delete();
+
+      _handleYoutubeVideo();
+
       setState(() {
         _isLocal = false;
-        _downloadVideoloading = false;
+        _loadingVideo = false;
       });
 
       Scaffold.of(ctx).showSnackBar(SnackBar(
         content: Text('Vídeo removido com sucesso!'),
+        duration: const Duration(seconds: 2),
+        // action: SnackBarAction(
+        //   label: 'Fechar',
+        //   onPressed: () {},
+        // )),
       ));
     } catch (error) {
       print(error);
@@ -154,12 +170,12 @@ class _AulaViewState extends State<AulaView> {
     final appBar = AppBar(
       title: Text(_responsavelStore.aula.titulo),
       actions: <Widget>[
-        _downloadVideoloading
+        _loadingVideo
             ? Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child:
-                    SizedBox(child: CircularProgressIndicator(strokeWidth: 3)),
+                child: SizedBox(
+                    child: const CircularProgressIndicator(strokeWidth: 3)),
               )
             : Builder(
                 builder: (ctx) => IconButton(

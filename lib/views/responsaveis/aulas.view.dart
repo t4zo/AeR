@@ -51,42 +51,38 @@ class _AulasViewState extends State<AulasView> {
     switch (_filterOptions) {
       case FilterOptions.AulasPendentes:
         setState(() {
-          _disciplinas =
-              _responsavelStore.disciplinas();
+          _disciplinas = _responsavelStore.disciplinas();
           _filterFeedback = FeedbackEnum.RealizadoSemAproveitamento;
           _filterStatus = StatusEnum.Pendente;
         });
         break;
       case FilterOptions.AulasVisualizadas:
         setState(() {
-          _disciplinas =
-              _responsavelStore.disciplinas();
+          _disciplinas = _responsavelStore.disciplinas();
           _filterFeedback = FeedbackEnum.RealizadoSemAproveitamento;
           _filterStatus = StatusEnum.Visualizada;
         });
         break;
       case FilterOptions.DesafiosRealizados:
         setState(() {
-          _disciplinas =
-              _responsavelStore.disciplinas();
+          _disciplinas = _responsavelStore.disciplinas();
           _filterFeedback = FeedbackEnum.RealizadoComAproveitamento;
           _filterStatus = StatusEnum.All;
         });
         break;
       case FilterOptions.DesafiosNaoAvaliados:
         setState(() {
-          _disciplinas =
-              _responsavelStore.disciplinas();
+          _disciplinas = _responsavelStore.disciplinas();
           _filterFeedback = FeedbackEnum.RealizadoSemAproveitamento;
           _filterStatus = StatusEnum.All;
         });
         break;
       default:
         setState(() {
-        _disciplinas = _responsavelStore.disciplinas();
-        _filterFeedback = FeedbackEnum.All;
-        _filterStatus = StatusEnum.All;
-      });
+          _disciplinas = _responsavelStore.disciplinas();
+          _filterFeedback = FeedbackEnum.All;
+          _filterStatus = StatusEnum.All;
+        });
     }
   }
 
@@ -126,7 +122,7 @@ class _AulasViewState extends State<AulasView> {
                   value: FilterOptions.DesafiosRealizados,
                 ),
                 PopupMenuItem(
-                  child: Text('Desafios não avaliados'),
+                  child: Text('Desafios Não Avaliados'),
                   value: FilterOptions.DesafiosNaoAvaliados,
                 ),
               ],
@@ -166,8 +162,9 @@ class _AulasViewState extends State<AulasView> {
                                                   .split('.')
                                                   .last,
                                               style: TextStyle(
-                                                  backgroundColor: Colors.red,
-                                                  color: Colors.white)),
+                                                backgroundColor: Colors.red,
+                                                color: Colors.white,
+                                              )),
                                         if (aula.status ==
                                             StatusEnum.Visualizada)
                                           TextSpan(
@@ -176,8 +173,9 @@ class _AulasViewState extends State<AulasView> {
                                                   .split('.')
                                                   .last,
                                               style: TextStyle(
-                                                  backgroundColor: Colors.grey,
-                                                  color: Colors.white)),
+                                                backgroundColor: Colors.grey,
+                                                color: Colors.white,
+                                              )),
                                         if (aula.status == StatusEnum.Realizada)
                                           TextSpan(
                                               text: aula.status
@@ -185,8 +183,9 @@ class _AulasViewState extends State<AulasView> {
                                                   .split('.')
                                                   .last,
                                               style: TextStyle(
-                                                  backgroundColor: Colors.green,
-                                                  color: Colors.white)),
+                                                backgroundColor: Colors.green,
+                                                color: Colors.white,
+                                              )),
                                       ])),
                                   trailing: Icon(Icons.forward),
                                   onTap: () => _handleChooseAula(context, aula),
