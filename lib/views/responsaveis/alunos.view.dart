@@ -8,10 +8,10 @@ class AlunosView extends StatelessWidget {
   static const routeName = '/responsavel/alunos';
 
   void _handleChooseAluno(BuildContext context, Aluno aluno) {
-    final _responsavelStore =
+    final responsavelStore =
         Provider.of<ResponsavelStore>(context, listen: false);
 
-    _responsavelStore.setAluno(aluno);
+    responsavelStore.setAluno(aluno);
 
     Navigator.of(context).pushNamed(AulasView.routeName);
   }
@@ -38,7 +38,7 @@ class AlunosView extends StatelessWidget {
                             child: Card(
                               child: ListTile(
                                 title: Text(aluno.nome),
-                                trailing: Icon(Icons.forward),
+                                trailing: const Icon(Icons.forward),
                                 subtitle:
                                     Text('${aluno.escola} - ${aluno.serie}'),
                                 onTap: () => _handleChooseAluno(context, aluno),

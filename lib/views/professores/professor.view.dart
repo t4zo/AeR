@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:AeR/views/professores/acompanhamentoAulas.view.dart';
+import 'package:AeR/views/professores/acompanhamento_aulas.view.dart';
 
 class ProfessorView extends StatefulWidget {
   @override

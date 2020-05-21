@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:AeR/repositories/responsavel.repository.dart';
 import 'package:AeR/stores/responsavel.store.dart';
 import 'package:chewie/chewie.dart';
 import 'package:dio/dio.dart';
@@ -18,12 +20,15 @@ class AulaView extends StatefulWidget {
 
 class _AulaViewState extends State<AulaView> {
   var _videoId = '1nIKe33ZELX8nQw4DrhkQhsjhOA-R5jzb';
-  bool _isLocal = false;
-  bool _initialLoading = true;
-  bool _loadingVideo = false;
   YoutubePlayerController _youtubePlayerController;
   VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
+  bool _isLocal = false;
+  bool _initialLoading = true;
+  bool _loadingVideo = false;
+
+  final _form = GlobalKey<FormState>();
+  String _resposta = '';
 
   @override
   void initState() {
@@ -91,15 +96,14 @@ class _AulaViewState extends State<AulaView> {
   Future _handleDownload() async {
     final _aplicationFilesDirectory =
         await syspaths.getApplicationDocumentsDirectory();
-    final _directory = Directory('${_aplicationFilesDirectory.path}/videos/');
-    Directory _dirAeR;
+    final videosDirectory =
+        Directory('${_aplicationFilesDirectory.path}/videos/');
 
-    if (await _directory.exists()) {
-      _dirAeR = _directory;
-    } else {
-      _dirAeR = await _directory.create();
+    if (!await videosDirectory.exists()) {
+      await videosDirectory.create();
     }
-    final _video = '${_dirAeR.path}/$_videoId.mp4';
+
+    final _video = '${videosDirectory.path}/$_videoId.mp4';
 
     setState(() {
       _loadingVideo = true;
@@ -119,18 +123,18 @@ class _AulaViewState extends State<AulaView> {
     showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-              title: Text('Download do vídeo'),
-              content: Text('Vídeo baixado com sucesso!'),
+              title: const Text('Download do vídeo'),
+              content: const Text('Vídeo baixado com sucesso!'),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Continuar'),
+                  child: const Text('Continuar'),
                   onPressed: () => Navigator.of(context).pop(),
                 )
               ],
             ));
   }
 
-  Future _handleDelete(BuildContext ctx) async {
+  Future _handleDelete() async {
     try {
       final app = await syspaths.getApplicationDocumentsDirectory();
       final videoPath = '${app.path}/videos/$_videoId.mp4';
@@ -149,17 +153,32 @@ class _AulaViewState extends State<AulaView> {
         _loadingVideo = false;
       });
 
-      Scaffold.of(ctx).showSnackBar(SnackBar(
-        content: Text('Vídeo removido com sucesso!'),
-        duration: const Duration(seconds: 2),
-        // action: SnackBarAction(
-        //   label: 'Fechar',
-        //   onPressed: () {},
-        // )),
-      ));
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Vídeo removido com sucesso!'),
+          duration: const Duration(seconds: 5),
+          // action: SnackBarAction(
+          //   label: 'Fechar',
+          //   onPressed: () => Navigator.of(context).pop(),
+          // ),
+        ),
+      );
     } catch (error) {
       print(error);
     }
+  }
+
+  _handleSubmit() {
+    final isValid = _form.currentState.validate();
+    if (!isValid) return;
+
+    _form.currentState.save();
+
+    Provider.of<ResponsavelStore>(context, listen: false)
+        .setResposta(_resposta);
+
+    ResponsavelRepository()
+        .add(Provider.of<ResponsavelStore>(context, listen: false));
   }
 
   @override
@@ -177,14 +196,10 @@ class _AulaViewState extends State<AulaView> {
                 child: SizedBox(
                     child: const CircularProgressIndicator(strokeWidth: 3)),
               )
-            : Builder(
-                builder: (ctx) => IconButton(
-                  icon: Icon(
-                      _isLocal == true ? Icons.delete : Icons.file_download),
-                  onPressed: _isLocal == true
-                      ? () => _handleDelete(ctx)
-                      : _handleDownload,
-                ),
+            : IconButton(
+                icon:
+                    Icon(_isLocal == true ? Icons.delete : Icons.file_download),
+                onPressed: _isLocal == true ? _handleDelete : _handleDownload,
               )
       ],
     );
@@ -233,15 +248,23 @@ class _AulaViewState extends State<AulaView> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                TextField(
-                                  decoration: InputDecoration(
-                                    labelText: 'Digite aqui a sua resposta',
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.all(Radius.zero)),
+                                Form(
+                                  key: _form,
+                                  child: TextFormField(
+                                    minLines: 10,
+                                    maxLines: 20,
+                                    decoration: InputDecoration(
+                                      labelText: 'Digite aqui a sua resposta',
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.all(Radius.zero)),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) return 'Campo vazio!';
+                                      return null;
+                                    },
+                                    onSaved: (value) => _resposta = value,
                                   ),
-                                  minLines: 10,
-                                  maxLines: 20,
                                 ),
                               ]),
                         ),
@@ -257,7 +280,16 @@ class _AulaViewState extends State<AulaView> {
                             elevation: 0,
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
-                            onPressed: () {},
+                            onPressed: () {
+                              _handleSubmit();
+                              _responsavelStore.setUpdate(true);
+                              // ResponsavelRepository().add(Responsavel(
+                              //   id: _responsavelStore.id,
+                              //   nome: _responsavelStore.nome,
+                              //   cpf: _responsavelStore.cpf,
+                              //   alunos: _responsavelStore.alunos,
+                              // ));
+                            },
                           ),
                         )
                       ],

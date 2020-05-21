@@ -28,69 +28,72 @@ class _AulasViewState extends State<AulasView> {
   @override
   void initState() {
     super.initState();
-    final _responsavelStore =
+    final responsavelStore =
         Provider.of<ResponsavelStore>(context, listen: false);
 
     setState(() {
-      _disciplinas = _responsavelStore.disciplinas();
+      _disciplinas = responsavelStore.disciplinas();
       _filterFeedback = FeedbackEnum.All;
       _filterStatus = StatusEnum.All;
     });
   }
 
-  void _handleChooseAula(BuildContext context, Aula aula) {
-    final _responsavelStore =
+  void _handleChooseAula(Aula aula) {
+    final responsavelStore =
         Provider.of<ResponsavelStore>(context, listen: false);
 
-    _responsavelStore.setAula(aula);
+    responsavelStore.setAula(aula);
 
     Navigator.of(context).pushNamed(AulaView.routeName);
   }
 
-  _handleFilterContent(ResponsavelStore _responsavelStore) {
+  void _handleFilterContent() {
+    final responsavelStore =
+        Provider.of<ResponsavelStore>(context, listen: false);
+
     switch (_filterOptions) {
       case FilterOptions.AulasPendentes:
         setState(() {
-          _disciplinas = _responsavelStore.disciplinas();
           _filterFeedback = FeedbackEnum.RealizadoSemAproveitamento;
           _filterStatus = StatusEnum.Pendente;
         });
         break;
       case FilterOptions.AulasVisualizadas:
         setState(() {
-          _disciplinas = _responsavelStore.disciplinas();
           _filterFeedback = FeedbackEnum.RealizadoSemAproveitamento;
           _filterStatus = StatusEnum.Visualizada;
         });
         break;
       case FilterOptions.DesafiosRealizados:
         setState(() {
-          _disciplinas = _responsavelStore.disciplinas();
           _filterFeedback = FeedbackEnum.RealizadoComAproveitamento;
           _filterStatus = StatusEnum.All;
         });
         break;
       case FilterOptions.DesafiosNaoAvaliados:
         setState(() {
-          _disciplinas = _responsavelStore.disciplinas();
           _filterFeedback = FeedbackEnum.RealizadoSemAproveitamento;
           _filterStatus = StatusEnum.All;
         });
         break;
       default:
         setState(() {
-          _disciplinas = _responsavelStore.disciplinas();
           _filterFeedback = FeedbackEnum.All;
           _filterStatus = StatusEnum.All;
+        });
+
+        setState(() {
+          _disciplinas = responsavelStore.disciplinas();
         });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final _responsavelStore = Provider.of<ResponsavelStore>(context);
+    final _responsavelStore =
+        Provider.of<ResponsavelStore>(context, listen: false);
 
-    _handleFilterContent(_responsavelStore);
+    _handleFilterContent();
 
     return SafeArea(
       child: Scaffold(
@@ -103,7 +106,7 @@ class _AulasViewState extends State<AulasView> {
                   _filterOptions = value;
                 });
               },
-              child: Icon(Icons.more_vert),
+              child: const Icon(Icons.more_vert),
               itemBuilder: (_) => [
                 PopupMenuItem(
                   child: Text('Todas as aulas'),
@@ -187,8 +190,8 @@ class _AulasViewState extends State<AulasView> {
                                                 color: Colors.white,
                                               )),
                                       ])),
-                                  trailing: Icon(Icons.forward),
-                                  onTap: () => _handleChooseAula(context, aula),
+                                  trailing: const Icon(Icons.forward),
+                                  onTap: () => _handleChooseAula(aula),
                                 ),
                               )
                               .toList(),

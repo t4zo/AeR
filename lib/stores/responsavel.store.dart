@@ -7,6 +7,9 @@ part 'responsavel.store.g.dart';
 class ResponsavelStore = _ResponsavelStore with _$ResponsavelStore;
 
 abstract class _ResponsavelStore with Store {
+  @observable 
+  int _id = 1;
+  
   @observable
   String _nome = 'Tácio de Souza Campos';
 
@@ -102,6 +105,9 @@ abstract class _ResponsavelStore with Store {
   @observable
   Aula _aula;
 
+  @observable
+  bool _hasUpdate = false;
+
   Set<String> disciplinas() => _aluno.aulas.map((aula) => aula.disciplina).toSet();
 
   Set<String> aulasPendentes(int disciplinaId) {
@@ -112,6 +118,8 @@ abstract class _ResponsavelStore with Store {
         .toSet();
     return aulas;
   }
+
+  int get id => _id;
 
   String get nome => _nome.toString();
 
@@ -127,6 +135,8 @@ abstract class _ResponsavelStore with Store {
 
   bool get hasAula => _aula != null;
 
+  bool get hasUpdate => _hasUpdate;
+
   @action
   void setNome(String nome) => _nome = nome;
 
@@ -141,4 +151,15 @@ abstract class _ResponsavelStore with Store {
 
   @action
   void setAula(Aula aula) => _aula = aula;
+
+  @action
+  void setResposta(String resposta) {
+    aula.resposta = resposta;
+  }
+
+  @action
+  bool setUpdate(bool value) {
+    _hasUpdate = value;
+    return _hasUpdate;
+  }
 }

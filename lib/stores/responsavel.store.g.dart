@@ -9,6 +9,21 @@ part of 'responsavel.store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ResponsavelStore on _ResponsavelStore, Store {
+  final _$_idAtom = Atom(name: '_ResponsavelStore._id');
+
+  @override
+  int get _id {
+    _$_idAtom.reportRead();
+    return super._id;
+  }
+
+  @override
+  set _id(int value) {
+    _$_idAtom.reportWrite(value, super._id, () {
+      super._id = value;
+    });
+  }
+
   final _$_nomeAtom = Atom(name: '_ResponsavelStore._nome');
 
   @override
@@ -137,6 +152,17 @@ mixin _$ResponsavelStore on _ResponsavelStore, Store {
         name: '_ResponsavelStore.setAula');
     try {
       return super.setAula(aula);
+    } finally {
+      _$_ResponsavelStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setResposta(String resposta) {
+    final _$actionInfo = _$_ResponsavelStoreActionController.startAction(
+        name: '_ResponsavelStore.setResposta');
+    try {
+      return super.setResposta(resposta);
     } finally {
       _$_ResponsavelStoreActionController.endAction(_$actionInfo);
     }
