@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:AeR/stores/responsavel.store.dart';
+import 'package:AeR/widgets/globalscaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,10 @@ class MaterialUiApp extends StatelessWidget {
         primarySwatch: Colors.red,
         accentColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      builder: (context, child) => Scaffold(
+        key: GlobalScaffold.instance.scaffoldKey,
+        body: child,
       ),
       initialRoute: '/',
       routes: {

@@ -1,0 +1,23 @@
+{
+  "responsavel": {
+    "nome": "",
+    "cpf": "",
+    "alunos": [
+      {
+        "nome": "",
+        "escola": "",
+        "serie": "",
+        "turno": "",
+        "aulas": {
+          "disciplina": "",
+          "titulo": "",
+          "status": ["pendente", "visualizada", "realizada"],
+          "desafio": "",
+          "assistido": false,
+          "resposta": "",
+          "feedback": ["Realizado com aproveitamento", "Realizado sem aproveitamento"]
+        }
+      }
+    ]
+  }
+}

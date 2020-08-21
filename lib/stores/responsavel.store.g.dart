@@ -6,7 +6,7 @@ part of 'responsavel.store.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ResponsavelStore on _ResponsavelStore, Store {
   final _$_idAtom = Atom(name: '_ResponsavelStore._id');
@@ -99,6 +99,21 @@ mixin _$ResponsavelStore on _ResponsavelStore, Store {
     });
   }
 
+  final _$_hasUpdateAtom = Atom(name: '_ResponsavelStore._hasUpdate');
+
+  @override
+  bool get _hasUpdate {
+    _$_hasUpdateAtom.reportRead();
+    return super._hasUpdate;
+  }
+
+  @override
+  set _hasUpdate(bool value) {
+    _$_hasUpdateAtom.reportWrite(value, super._hasUpdate, () {
+      super._hasUpdate = value;
+    });
+  }
+
   final _$_ResponsavelStoreActionController =
       ActionController(name: '_ResponsavelStore');
 
@@ -158,11 +173,22 @@ mixin _$ResponsavelStore on _ResponsavelStore, Store {
   }
 
   @override
-  dynamic setResposta(String resposta) {
+  void setResposta(String resposta) {
     final _$actionInfo = _$_ResponsavelStoreActionController.startAction(
         name: '_ResponsavelStore.setResposta');
     try {
       return super.setResposta(resposta);
+    } finally {
+      _$_ResponsavelStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  bool setUpdate(bool value) {
+    final _$actionInfo = _$_ResponsavelStoreActionController.startAction(
+        name: '_ResponsavelStore.setUpdate');
+    try {
+      return super.setUpdate(value);
     } finally {
       _$_ResponsavelStoreActionController.endAction(_$actionInfo);
     }

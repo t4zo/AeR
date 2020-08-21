@@ -1,5 +1,11 @@
+import 'dart:async';
+
+import 'package:AeR/stores/connectivity.store.dart';
 import 'package:AeR/views/responsaveis/alunos.view.dart';
+import 'package:AeR/widgets/globalscaffold.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ResponsavelView extends StatefulWidget {
   @override
@@ -8,9 +14,39 @@ class ResponsavelView extends StatefulWidget {
 
 class ResponsavelViewState extends State<ResponsavelView> {
   final _form = GlobalKey<FormState>();
+  StreamSubscription<ConnectivityResult> subscription;
 
   String cpf = '';
   bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      Provider.of<ConnectivityStore>(context, listen: false)
+          .setConnectivity(result);
+      print(result);
+      if (!Provider.of<ConnectivityStore>(context, listen: false)
+          .hasConnection) {
+        GlobalScaffold.instance.showSnackBar(SnackBar(
+          content: Text(
+            'Sem acesso a internet',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+          // duration: Duration(days: 365),
+        ));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subscription.cancel();
+  }
 
   Future _handleSignIn(BuildContext context) async {
     setState(() {
